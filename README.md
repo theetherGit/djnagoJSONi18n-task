@@ -72,6 +72,8 @@ update database entries when we add or remove language support with simple comma
   
 - Adding form and model to `admin.py` to use admin panel for test of our widget.
     ```python
+    # i18nJson/admin.py
+    
     from django.contrib import admin
     from i18nJson.forms import ArticleForm
     from i18nJson.models import Article
@@ -110,5 +112,6 @@ update database entries when we add or remove language support with simple comma
     ```bash
     python manage.py runserver 
     ```
-  > This will run a dev server on ` http://127.0.0.1:8000/` now you can go to ` http://127.0.0.1:8000/admin/` then you need login to admin panel
+  > This will run a dev server on ` http://127.0.0.1:8000/` now you can go to 
+  > `http://127.0.0.1:8000/admin/` then you need login to admin panel
   > then you can play with it.
