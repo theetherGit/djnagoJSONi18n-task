@@ -85,7 +85,18 @@ update database entries when we add or remove language support with simple comma
     ```
   > Now we have added the form and model, we are going to access our django admin panel for that we need to createsuperuser.
   > Do that and access admin panel and use your jsonField as a translation field.
-  
+
+#### Pros of using JSONField to store translations
+
+- Simplified database schema: Using a single JSONField to store translations simplifies the database schema as there is no need to create a separate table to store translations.
+- Flexible and extensible: JSON is a flexible data format that can store complex data structures. This makes it easy to extend the translation system to include additional metadata or properties as needed.
+- Easy to use: Working with JSON data in Python is straightforward as it can be loaded into a Python dictionary, allowing for easy access to translations in different languages.
+
+#### Cons of using JSONField to store translations
+
+- Limited querying capability: As the translations are stored in a single field, querying the database to find all instances of a certain translated term can be difficult. This can be addressed by using a specialized indexing solution, but this requires additional setup and configuration.
+- Potential performance issues: As the size of the JSONField grows, querying and updating records can become slower. Additionally, searching within the JSON data can be slower than querying a dedicated translation table. However, these issues may not be noticeable until a large number of records are present.
+
 ### Task Two: Tree - (optional) - Haven't tried yet.
 
 ## Test on your system
