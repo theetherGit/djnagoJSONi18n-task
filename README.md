@@ -99,6 +99,60 @@ update database entries when we add or remove language support with simple comma
 
 ### Task Two: Tree - (optional) - Haven't tried yet.
 
+Let’s look at the following simple tree: 
+where `A` is `parent` to `B` and `C`, `B` is `parent` to `D` and `E`.
+
+How would you implement such a data model in any `RDBMS`? Please provide your
+thoughts or even add a simple code snippet (Django-based would be great). What are possible
+approaches and pros/cons? How does `D` node relate to `A` node? Imagine there are `10 000`
+items and `depth level` is `10`. How would you count number of `descendants` (e.g., for A count
+B + D + E) of any node on the first level?
+
+#### Answers
+
+-To implement such a data model in an RDBMS, My approach is to use a column for the parent-child relationship. 
+This column would contain the ID of the parent for each child. For example, for Node A, the column would contain null, 
+for Node B and C it would contain the ID of Node A, for Node D and E it would contain the ID of Node B, and so on.
+- Here, I'm using a django specific package `django-mptt` for this which provide extra functionality out of the box.
+- Implementation
+  ```python
+  # tree/models.py
+  
+  from django.db import models
+  from mptt.models import MPTTModel, TreeForeignKey
+  
+  
+  class TreeNode(MPTTModel):
+      name = models.CharField(max_length=255)
+      parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True, on_delete=models.CASCADE)
+  
+      class MPTTMeta:
+          order_insertion_by = ['name']
+  
+      def __str__(self):
+          return f"{self.name} - {self.get_descendant_count()}"
+  ```
+  
+#### Pros of using MPTT
+- Easy to understand and implement.
+- Easier to query data that is organized into a tree structure. This can be especially useful when dealing with large datasets. (Fast readability)
+- Easily scaled to accommodate large data sets by adding additional columns and rows as needed
+
+#### Cons of using MPTT
+- Slow writes
+- Hard to make changes to the parent-child relationships when they are stored in a single column.
+
+#### How does `D` node relate to `A` node?
+Node D relates to Node A through its parent-child relationship. Node D is a descendant of Node A, as it is a child of Node B, which is a child of Node A.
+
+#### Counting Descendants
+- To count the number of descendants of any node on the first level, you would need 
+to perform a recursive query that counts the number of children of each node, 
+starting from the first level. This query would need to be run on each node in the 
+tree, and the results would need to be aggregated to get the total number of 
+descendants. This could become very slow if the tree has a large number of items and 
+a large depth level.
+- 
 ## Test on your system
 
 - Clone this repository
